@@ -1,0 +1,40 @@
+{% extends "base.html" %} {% block content %}
+<div class="row">
+    {% if current_user.is_authenticated %}
+    <p class="u-pull-right">
+        <a href="{{ url_for('auth.logout') }}">Logout</a>
+    </p>
+    {% endif %}
+</div>
+
+<div class="row">
+    <a href=" {{ url_for('main.index') }} ">На главную</a> |
+    <a href=" {{ url_for('main.persons') }} ">Физические лица</a> |
+    <a href=" {{ url_for('main.orgs') }} ">Организации</a>
+</div>
+
+<form action="" method="POST">
+    <div class="row">
+        <div class="ten columns">
+            {{ form.hidden_tag() }}
+        </div>
+    </div>
+    {% for field in form %}
+        {% if field.type not in ["SubmitField", "CSRFTokenField"] %}
+            <div class="row">
+                <div class="ten columns">
+                    {{ field.label }}
+                    {{ field(class="u-full-width") }}
+                    <!-- {% if field.errors %} -->
+                    {% for error in field.errors %}
+                        <small>{{ error }}</small>
+                    {% endfor %}
+                    <!-- {% endif %} -->
+                </div>
+            </div>
+        {% endif %}
+    {% endfor %}
+    {{ form.submit(class="button-primary") }}
+</form>
+
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends "base.html" %} {% block content %}
+<div class="row">
+    {% if current_user.is_authenticated %}
+    <p class="u-pull-right">
+        <a href="{{ url_for('auth.logout') }}">Logout</a>
+    </p>
+    {% endif %}
+</div>
+
+<div class="row">
+    <a href="{{ url_for('main.index') }}">На главную</a> |
+     <a href="{{ url_for('main.persons') }}">Физические лица</a>
+</div>
+
+<div class="row">
+    <table class="u-full-width">
+        <thead>
+            <tr>
+                <th>Создан</th>
+                <th>Название</th>
+                <th>Название(альт)</th>
+                <th>Заметка</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for org in orgs %}
+            <tr>
+                <td>{{ org.created }}</td>
+                <td><a href="{{ url_for('main.org', id=org.id) }}">{{ org.name }}</a></td>
+                <td>{{ org.name_eng }}</td>
+                <td>{{ org.note }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="row">
+    <div class="six columns">
+        {% if prev_url %}
+            <a href="{{ prev_url }}">Влево</a>
+        {% endif %}
+    </div>
+    <div class="six columns">
+        {% if next_url %}
+            <a class="u-pull-right" href="{{ next_url }}">Вправо</a>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}
