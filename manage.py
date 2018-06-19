@@ -1,5 +1,5 @@
 from app import create_app, db
-from app.models import User, Terrorist, Org, Log
+from app.models import User, Terrorist, Org
 
 import threading
 import os
@@ -21,12 +21,7 @@ def call_async_kfm(app):
 
         with app.app_context():
             Terrorist.init_included()
-            db.session.add(Log(message='KFM terrorists request'))
-
             Org.init_included()
-            db.session.add(Log(message='KFM orgs request'))
-
-            db.session.commit()
 
         # Call func every 6 hours if KFM_SYNC_TIMER is not set
         t = threading.Timer(
