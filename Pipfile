@@ -11,6 +11,8 @@ flask-migrate = "*"
 flask-login = "*"
 python-dotenv = "*"
 requests = "*"
+gunicorn = "*"
+pymysql = "*"
 
 [dev-packages]
 requests = "*"
