@@ -29,16 +29,18 @@ def get_XML_from_URL(link_to_file):
 
     if link_to_file is None:
         raise ValueError('Link to file not found')
-
-    if 'included' in link_to_file:
-        # Use request with session
-        with requests.Session() as s:
-            headers = {'Cache-Control': 'no-cache'}
-            p = s.post(ACCESS_URL, headers=headers)  # login to the web page
-            r = s.get(link_to_file)
-    else:
-        # Use usual request
-        r = requests.get(link_to_file)
+    try:
+        if 'included' in link_to_file:
+            # Use request with session
+            with requests.Session() as s:
+                headers = {'Cache-Control': 'no-cache'}
+                p = s.post(ACCESS_URL, headers=headers)  # login to the web page
+                r = s.get(link_to_file)
+        else:
+            # Use usual request
+            r = requests.get(link_to_file)
+    except (requests.exceptions.Timeout, requests.exceptions.HTTPError):
+        return None
     return ET.fromstring(r.text)
 
 
@@ -46,6 +48,10 @@ def get_list_from_XML(xml_object, object_type):
     """Loop over XML (xml_object) and find all object_type.
     Return list of dictionaries containing persons or organizatons.
     """
+
+    # Return empty list if xml object is not presented
+    if xml_object is None:
+        return []
 
     object_types = {
             'person': ('persons/person',),

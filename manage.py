@@ -1,9 +1,10 @@
 from app import create_app, db
-from app.models import User, Terrorist, Org
+from app.models import User, Terrorist, Org, Log
 
 import threading
 import os
 
+import datetime
 
 app = create_app()
 
@@ -14,13 +15,29 @@ def make_shell_context():
 
 
 def call_async_kfm(app):
-    with app.app_context():
-        Terrorist.init_included()
-        Org.init_included()
-    # Call func every 6 hours if KFM_SYNC_TIMER is not set
-    threading.Timer(
-            os.getenv('KFM_SYNC_TIMER', 21600), call_kfn, (app,)
-        ).start()
 
+    dif = datetime.datetime.utcnow() - app_start
+    if dif.seconds > 1000:
 
-call_async_kfm(app)
+        with app.app_context():
+            Terrorist.init_included()
+            db.session.add(Log(message='KFM terrorists request'))
+
+            Org.init_included()
+            db.session.add(Log(message='KFM orgs request'))
+
+            db.session.commit()
+
+        # Call func every 6 hours if KFM_SYNC_TIMER is not set
+        t = threading.Timer(
+                int(os.getenv('KFM_SYNC_TIMER', 21600)), call_async_kfm, (app,)
+            )
+        t.daemon = True
+        t.start()
+
+app_start = datetime.datetime.utcnow()
+
+try:
+    call_async_kfm(app)
+except (KeyboardInterrupt, SystemExit):
+    print('\nReceived keyboard interrupt, quitting threads.\n')

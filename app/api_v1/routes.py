@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from app import db
-from app.models import Terrorist, Org
+from app.models import Terrorist, Org, Log
 from app.api_v1 import bp
 from app.api_v1.errors import error_response, bad_request
 
@@ -12,6 +12,11 @@ from sqlalchemy import or_
 def org():
     # Get request parameters and check if 'name' is presented
     data = request.args
+
+    message = 'API Org request: {}'.format(data)
+    db.session.add(Log(message=message[0:512]))
+    db.session.commit()
+
     if 'name' not in data:
         return bad_request('Parameter name must be in request')
 
@@ -35,15 +40,27 @@ def terrorist():
 
     data = request.args
 
-    if 'lname' not in data or 'fname' not in data:
-        return bad_request('parameters lname and fname must be in request')
+    message = 'API Terrorist request: {}'.format(data)
+    db.session.add(Log(message=message[0:512]))
+    db.session.commit()
 
-    ter = db.session.query(
+    if 'iin' in data:
+        ter = db.session.query(
             Terrorist
         ).filter(
-            Terrorist.lname == data['lname'].strip().upper(),
-            Terrorist.fname == data['fname'].strip().upper()
+            Terrorist.iin == data['iin'].strip()
         ).first()
+    elif 'lname' in data and 'fname' in data:
+        ter = db.session.query(
+                Terrorist
+            ).filter(
+                Terrorist.lname == data['lname'].strip().upper(),
+                Terrorist.fname == data['fname'].strip().upper()
+            ).first()
+    else:
+        return bad_request(
+                'parameters iin or lname and fname must be in request'
+            )
 
     if ter:
         response = jsonify([ter.as_json()])

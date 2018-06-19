@@ -2,16 +2,15 @@
 
 from datetime import datetime
 
-from flask import render_template, request, url_for, abort, redirect
+from flask import abort, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
+from sqlalchemy import desc
+from sqlalchemy.exc import IntegrityError
 
 from app import db
 from app.main import bp
-from app.main.forms import TerroristForm, OrgForm
-from app.models import Org, Terrorist
-
-from sqlalchemy import desc
-from sqlalchemy.exc import IntegrityError
+from app.main.forms import OrgForm, TerroristForm
+from app.models import Log, Org, Terrorist
 
 
 @bp.route('/')
@@ -127,3 +126,23 @@ def org(id):
         return redirect(url_for('main.orgs'))
 
     return render_template('edit_form.html', form=form)
+
+
+@bp.route('/logs')
+@login_required
+def logs():
+    """Show just orgs."""
+    page = request.args.get('page', 1, type=int)
+
+    logs = db.session.query(
+            Log
+        ).order_by(
+            desc(Log.created)
+        ).paginate(page, 50, False)
+
+    next_url = url_for('main.logs', page=logs.next_num) if logs.has_next else None
+    prev_url = url_for('main.logs', page=logs.prev_num) if logs.has_prev else None
+
+    return render_template(
+            'logs.html', logs=logs.items, next_url=next_url, prev_url=prev_url
+        )
