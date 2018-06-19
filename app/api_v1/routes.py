@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from app import db
-from app.models import Terrorist, Org, Log
+from app.models import Terrorist, Org
 from app.api_v1 import bp
 from app.api_v1.errors import error_response, bad_request
 
@@ -12,10 +12,6 @@ from sqlalchemy import or_
 def org():
     # Get request parameters and check if 'name' is presented
     data = request.args
-
-    message = 'API Org request: {}'.format(data)
-    db.session.add(Log(message=message[0:512]))
-    db.session.commit()
 
     if 'name' not in data:
         return bad_request('Parameter name must be in request')
@@ -39,10 +35,6 @@ def org():
 def terrorist():
 
     data = request.args
-
-    message = 'API Terrorist request: {}'.format(data)
-    db.session.add(Log(message=message[0:512]))
-    db.session.commit()
 
     if 'iin' in data:
         ter = db.session.query(

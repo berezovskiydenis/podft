@@ -194,13 +194,6 @@ class Org(db.Model):
                 db.session.commit()
 
 
-class Log(db.Model):
-    __tablename__ = 'logs'
-    id = db.Column(db.Integer(), primary_key=True)
-    created = db.Column(db.DateTime(), default=datetime.utcnow)
-    message = db.Column(db.String(512))
-
-
 # --------------- Helper Functions --------------------------------------------
 @login.user_loader
 def load_user(id):

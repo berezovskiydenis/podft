@@ -7,15 +7,12 @@ from werkzeug.urls import url_parse
 from app import db
 from app.auth import bp
 from app.auth.forms import LoginForm, RegistrationForm
-from app.models import User, Log
+from app.models import User
 
 
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
-        # Add login message to log
-        db.session.add(Log(message='{} log in'.format(current_user.username)))
-        db.session.commit()
         # Redirect to index page
         return redirect(url_for('main.index'))
 
@@ -31,19 +28,12 @@ def login():
         if not next_page or url_parse(next_page).netloc != '':
             next_page = url_for('main.index')
 
-        # Add login message to log
-        db.session.add(Log(message='{} log in'.format(current_user.username)))
-        db.session.commit()
-
         return redirect(next_page)
     return render_template('auth/login.html', form=form)
 
 
 @bp.route('/logout')
 def logout():
-    # Add logout message to log
-    db.session.add(Log(message='{} log out'.format(current_user.username)))
-    db.session.commit()
     # Logout user
     logout_user()
     return redirect(url_for('main.index'))
