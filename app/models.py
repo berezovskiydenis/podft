@@ -38,6 +38,12 @@ class Terrorist(db.Model):
         else:
             return None
 
+    def birthdate_fancy(self):
+        if self.birthdate:
+            return self.birthdate.strftime('%d.%m.%Y')
+        else:
+            return None
+
     def included_fancy(self):
         if self.included:
             return self.included.strftime('%d.%m.%Y')

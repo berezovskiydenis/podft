@@ -19,6 +19,7 @@
                 <th>Имя</th>
                 <th>Отчество</th>
                 <th>ИИН</th>
+                <th>ДР</th>
                 <th>Включен</th>
                 <th>Исключен</th>
             </tr>
@@ -31,6 +32,7 @@
                 <td>{{ ter.fname }}</td>
                 <td>{% if ter.mname %}{{ ter.mname }}{% endif %}</td>
                 <td>{% if ter.iin %}{{ ter.iin }}{% endif %}</td>
+                <td>{% if ter.birthdate_fancy() %}{{ ter.birthdate_fancy() }}{% endif %}</td>
                 <td>{% if ter.included_fancy() %}{{ ter.included_fancy() }}{% endif %}</td>
                 <td>{% if ter.excluded_fancy() %}{{ ter.excluded_fancy() }}{% endif %}</td>
               </tr>

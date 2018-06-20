@@ -1,10 +1,11 @@
-from app import create_app, db
-from app.models import User, Terrorist, Org
-
-import threading
-import os
-
 import datetime
+import os
+import threading
+
+from sqlalchemy import inspect
+
+from app import create_app, db
+from app.models import Org, Terrorist, User
 
 app = create_app()
 
@@ -15,10 +16,17 @@ def make_shell_context():
 
 
 def call_async_kfm(app):
-    dif = datetime.datetime.utcnow() - app_start
-    if dif.seconds > 600:
+    """Async function to grab included terrorists (persons and orgs)
+    from KFM web page.
+    """
+    with app.app_context():
+        # Use and inspect method to check is tables exists
+        inspector = inspect(db.engine)
+        # get_table_names returns list of existing tables or empty list
+        table_names = inspector.get_table_names()
 
-        with app.app_context():
+        # Check if tables are in the list of existing tables
+        if 'terrorists' in table_names and 'orgs' in table_names:
             Terrorist.init_included()
             Org.init_included()
 
@@ -29,9 +37,9 @@ def call_async_kfm(app):
         t.daemon = True
         t.start()
 
-app_start = datetime.datetime.utcnow()
-
 try:
     call_async_kfm(app)
 except (KeyboardInterrupt, SystemExit):
     print('\nReceived keyboard interrupt, quitting threads.\n')
+
+db.get_tables_for_bind()
