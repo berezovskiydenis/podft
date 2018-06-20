@@ -1,18 +1,27 @@
 import datetime
 import os
 import threading
+import click
 
 from sqlalchemy import inspect
 
 from app import create_app, db
 from app.models import Org, Terrorist, User
 
-app = create_app()
+app = create_app(os.getenv('FLASK_CONFIG', default='default'))
 
 
 @app.shell_context_processor
 def make_shell_context():
     return dict(db=db, Terrorist=Terrorist, Org=Org)
+
+
+@app.cli.command()
+def test():
+    """Run tests"""
+    import unittest
+    _tests = unittest.TestLoader().discover('tests')
+    unittest.TextTestRunner(verbosity=2).run(_tests)
 
 
 def call_async_kfm(app):

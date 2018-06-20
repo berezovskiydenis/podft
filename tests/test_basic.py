@@ -4,19 +4,16 @@ import unittest
 from datetime import datetime
 from decimal import Decimal
 
+from flask import current_app
+
 from app import create_app, db
 from app.models import Org, Terrorist, User
 from config import Config
 
 
-class TestConfig(Config):
-    TESTING = True
-    SQLALCHEMY_DATABASE_URI = 'sqlite://'
-
-
 class BaseTest(unittest.TestCase):
     def setUp(self):
-        self.app = create_app(TestConfig)
+        self.app = create_app('testing')
         self.app_context = self.app.app_context()
         self.app_context.push()
         db.create_all()
@@ -25,6 +22,12 @@ class BaseTest(unittest.TestCase):
         db.session.remove()
         db.drop_all()
         self.app_context.pop()
+
+    def test_app_exists(self):
+        self.assertFalse(current_app is None)
+
+    def test_app_is_testing(self):
+        self.assertTrue(current_app.config['TESTING'])
 
 
 class UserModelTest(BaseTest):
@@ -43,7 +46,6 @@ class TerroristModelTest(BaseTest):
     mname = 'ofceebovich'
     iin = '858585123412'
     birthdate = datetime(1975, 1, 1)
-    note = 'Ass hole'
 
     def test_terrorist_creation(self):
         t = Terrorist(
@@ -51,15 +53,13 @@ class TerroristModelTest(BaseTest):
                 fname=self.fname,
                 mname=self.mname,
                 iin=self.iin,
-                birthdate=self.birthdate,
-                note=self.note
+                birthdate=self.birthdate
             )
         self.assertEqual(t.fname, self.fname)
         self.assertEqual(t.lname, self.lname)
         self.assertEqual(t.mname, self.mname)
         self.assertEqual(t.birthdate, self.birthdate)
         self.assertEqual(t.iin, self.iin)
-        self.assertEqual(t.note, self.note)
 
     def test_history_creation(self):
         t = Terrorist(
@@ -67,8 +67,7 @@ class TerroristModelTest(BaseTest):
                 fname=self.fname,
                 mname=self.mname,
                 iin=self.iin,
-                birthdate=self.birthdate,
-                note=self.note
+                birthdate=self.birthdate
         )
 
         hist = {
@@ -94,18 +93,15 @@ class OrgModelTest(BaseTest):
     def test_org_creation(self):
         o = Org(
                 name=self.name,
-                name_eng=self.name_eng,
-                note=self.note
+                name_eng=self.name_eng
             )
         self.assertEqual(o.name, self.name)
         self.assertEqual(o.name_eng, self.name_eng)
-        self.assertEqual(o.note, self.note)
 
     def test_history_creation(self):
         o = Org(
                 name=self.name,
-                name_eng=self.name_eng,
-                note=self.note
+                name_eng=self.name_eng
             )
 
         hist = {
@@ -123,5 +119,5 @@ class OrgModelTest(BaseTest):
         self.assertEqual(o.excluded, hist['excluded'])
 
 
-if __name__ == '__main__':
-    unittest.main(verbosity=3)
+# if __name__ == '__main__':
+#     unittest.main(verbosity=3)
