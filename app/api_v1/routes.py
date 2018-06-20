@@ -21,7 +21,6 @@ def org():
                 Org.name_eng == data['name'],
                 Org.name == data['name']
             )
-
         ).first()
 
     if org_found:

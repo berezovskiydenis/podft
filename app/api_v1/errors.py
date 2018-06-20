@@ -13,6 +13,7 @@ def error_response(status_code, message=None):
         payload['message'] = message
 
     response = jsonify(payload)
+    response.status_code = status_code
     return response
 
 
