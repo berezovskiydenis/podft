@@ -90,7 +90,6 @@ def create_person(a_list):
         'mname': None,
         'iin': None,
         'birthdate': None,
-        'note': None,
         'included': None,
         'excluded': None
     }
@@ -115,7 +114,6 @@ def create_person(a_list):
 
         # If tag is 'note' then mazafaka comes :(
         elif value.tag == 'note' and value.text is not None:
-            result[value.tag] = value.text.strip()
             # A 'note' could be anything... let's try convert text to list
             note_list = value.text.split()
             # If the text converted to the list and it has more than 1 value
@@ -145,7 +143,6 @@ def create_org(list_of_elements):
     result = {
         'org_name': None,
         'org_name_en': None,
-        'note': None,
         'included': None,
         'excluded': None
     }
@@ -154,8 +151,6 @@ def create_org(list_of_elements):
         if val.text is not None:
             if val.tag in ['org_name', 'org_name_en']:
                 result[val.tag] = val.text.strip().upper()
-            else:
-                result[val.tag] = val.text.strip()
 
             # Grab included and excluded dates
             if val.tag == 'note':

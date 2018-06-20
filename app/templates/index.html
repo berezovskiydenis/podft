@@ -8,13 +8,13 @@
 </div>
 
 <h3>Перечень организаций и лиц, связанных с финансированием терроризма и экстремизма</h3>
-<h5><em>Согласно перечня данных предоставленных <a href="http://kfm.gov.kz/ru/the-list-of-organizations-and-individuals-associa/">КФМ РК</a></em></h5>
+<h5><em>Согласно данным предоставленным <a href="http://kfm.gov.kz/ru/the-list-of-organizations-and-individuals-associa/">КФМ РК</a> самым криворуким образом</em></h5>
 
 <hr>
 
 <h5>Разделы</h5>
 <div class="row">
-    <a href=" {{ url_for('main.persons') }} ">Физические лица</a> | <a href=" {{ url_for('main.orgs') }} ">Организации</a> | <a href=" {{ url_for('main.logs') }} ">Логи</a>
+    <a href=" {{ url_for('main.persons') }} ">Физические лица</a> | <a href=" {{ url_for('main.orgs') }} ">Организации</a>
 </div>
 
 <hr>
@@ -25,19 +25,16 @@
         <tr>
           <th>Объекты</th>
           <th>Количество</th>
-          <th>Последнее обновление</th>
         </tr>
     </thead>
     <tbody>
         <tr>
             <td>Физические лица</td>
             <td>{{ t_count }}</td>
-            <td>{{ t_last_update }}</td>
         </tr>
         <tr>
             <td>Организации</td>
             <td>{{ o_count }}</td>
-            <td>{{ o_last_update }}</td>
         </tr>
     </tbody>
 </table>

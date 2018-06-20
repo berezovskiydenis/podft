@@ -26,12 +26,29 @@ class Terrorist(db.Model):
     mname = db.Column(db.String(512))
     iin = db.Column(db.String(512))
     birthdate = db.Column(db.Date())
-    note = db.Column(db.String(512))
     included = db.Column(db.Date())
     excluded = db.Column(db.Date())
 
     def __repr__(self):
         return "<Terrorist {}: {}>".format(self.id, self.lname)
+
+    def created_fancy(self):
+        if self.created:
+            return self.created.strftime('%d.%m.%Y')
+        else:
+            return None
+
+    def included_fancy(self):
+        if self.included:
+            return self.included.strftime('%d.%m.%Y')
+        else:
+            return None
+
+    def excluded_fancy(self):
+        if self.excluded:
+            return self.excluded.strftime('%d.%m.%Y')
+        else:
+            return None
 
     @staticmethod
     def iso_date(date_and_time):
@@ -41,13 +58,20 @@ class Terrorist(db.Model):
         else:
             return None
 
+    @staticmethod
+    def friendly_date(date_and_time):
+        if date_and_time:
+            return date_and_time.strftime('%d.%m.%Y')
+        else:
+            return None
+
     def as_json(self):
         """Return Terrorist data as dictionary."""
         terrorist = dict(
                 id=self.id, created=self.iso_date(self.created),
                 lname=self.lname, fname=self.fname, mname=self.mname,
                 iin=self.iin, birthdate=self.iso_date(self.birthdate),
-                note=self.note, included=self.iso_date(self.included),
+                included=self.iso_date(self.included),
                 excluded=self.iso_date(self.excluded)
             )
         return terrorist
@@ -60,7 +84,7 @@ class Terrorist(db.Model):
         for x in active_persons_list:
             t = Terrorist(
                     lname=x['lname'], fname=x['fname'], mname=x['mname'],
-                    iin=x['iin'], birthdate=x['birthdate'], note=x['note'],
+                    iin=x['iin'], birthdate=x['birthdate'],
                     included=x['included'], excluded=x['excluded']
                 )
             db.session.add(t)
@@ -107,7 +131,7 @@ class Terrorist(db.Model):
                 t = Terrorist(
                         lname=ip['lname'], fname=ip['fname'],
                         mname=ip['mname'], iin=ip['iin'],
-                        birthdate=ip['birthdate'], note=ip['note'],
+                        birthdate=ip['birthdate'],
                         included=ip['included'], excluded=ip['excluded']
                     )
                 db.session.add(t)
@@ -121,7 +145,6 @@ class Org(db.Model):
     created = db.Column(db.DateTime(), default=datetime.utcnow)
     name = db.Column(db.String(512), index=True)
     name_eng = db.Column(db.String(512))
-    note = db.Column(db.String(512))
     included = db.Column(db.Date())
     excluded = db.Column(db.Date())
 
@@ -132,7 +155,6 @@ class Org(db.Model):
             created=self.iso_date(self.created),
             name=self.name,
             name_eng=self.name_eng,
-            note=self.note,
             included=self.iso_date(self.included),
             excluded=self.iso_date(self.excluded)
         )
@@ -146,6 +168,24 @@ class Org(db.Model):
         else:
             return None
 
+    def created_fancy(self):
+        if self.created:
+            return self.created.strftime('%d.%m.%Y')
+        else:
+            return None
+
+    def included_fancy(self):
+        if self.included:
+            return self.included.strftime('%d.%m.%Y')
+        else:
+            return None
+
+    def excluded_fancy(self):
+        if self.excluded:
+            return self.excluded.strftime('%d.%m.%Y')
+        else:
+            return None
+
     @staticmethod
     def init_active():
         """Initialize active organizations records to database"""
@@ -154,7 +194,7 @@ class Org(db.Model):
         for k in active_orgs_list:
             o = Org(
                     name=k['org_name'], name_eng=k['org_name_en'],
-                    note=k['note'], included=k['included']
+                    included=k['included']
                 )
             db.session.add(o)
         db.session.commit()
@@ -188,7 +228,7 @@ class Org(db.Model):
             if o is None:
                 o = Org(
                         name=iorg['org_name'], name_eng=iorg['org_name_en'],
-                        note=iorg['note'], included=iorg['included']
+                        included=iorg['included']
                     )
                 db.session.add(o)
                 db.session.commit()

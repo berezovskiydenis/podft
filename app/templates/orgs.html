@@ -19,16 +19,18 @@
                 <th>Создан</th>
                 <th>Название</th>
                 <th>Название(альт)</th>
-                <th>Заметка</th>
+                <th>Включен</th>
+                <th>Исключен</th>
             </tr>
         </thead>
         <tbody>
             {% for org in orgs %}
             <tr>
-                <td>{{ org.created }}</td>
-                <td><a href="{{ url_for('main.org', id=org.id) }}">{{ org.name }}</a></td>
-                <td>{{ org.name_eng }}</td>
-                <td>{{ org.note }}</td>
+                <td>{{ org.created_fancy() }}</td>
+                <td>{{ org.name }} </td>
+                <td>{% if org.name_eng %}{{ org.name_eng }}{% endif %}</td>
+                <td>{% if org.included_fancy() %}{{ org.included_fancy() }}{% endif %}</td>
+                <td>{% if org.excluded_fancy() %}{{ org.excluded_fancy() }}{% endif %}</td>
             </tr>
             {% endfor %}
         </tbody>

@@ -17,6 +17,7 @@
                 <th>Создан</th>
                 <th>Фамилия</th>
                 <th>Имя</th>
+                <th>Отчество</th>
                 <th>ИИН</th>
                 <th>Включен</th>
                 <th>Исключен</th>
@@ -25,12 +26,13 @@
         <tbody>
             {% for ter in ters %}
               <tr>
-                <td>{{ ter.created }}</td>
-                <td><a href="{{ url_for('main.person', id=ter.id) }}">{{ ter.lname }}</a></td>
+                <td>{{ ter.created_fancy() }}</td>
+                <td>{{ ter.lname }}</td>
                 <td>{{ ter.fname }}</td>
-                <td>{{ ter.iin }}</td>
-                <td>{{ ter.included }}</td>
-                <td>{{ ter.excluded }}</td>
+                <td>{% if ter.mname %}{{ ter.mname }}{% endif %}</td>
+                <td>{% if ter.iin %}{{ ter.iin }}{% endif %}</td>
+                <td>{% if ter.included_fancy() %}{{ ter.included_fancy() }}{% endif %}</td>
+                <td>{% if ter.excluded_fancy() %}{{ ter.excluded_fancy() }}{% endif %}</td>
               </tr>
             {% endfor %}
         </tbody>

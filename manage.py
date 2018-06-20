@@ -15,9 +15,8 @@ def make_shell_context():
 
 
 def call_async_kfm(app):
-
     dif = datetime.datetime.utcnow() - app_start
-    if dif.seconds > 1000:
+    if dif.seconds > 600:
 
         with app.app_context():
             Terrorist.init_included()
