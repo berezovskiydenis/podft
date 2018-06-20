@@ -4,7 +4,7 @@ from app.models import Terrorist, Org
 from app.api_v1 import bp
 from app.api_v1.errors import error_response, bad_request
 
-from flask import jsonify, request, url_for
+from flask import jsonify, request, url_for, render_template
 from sqlalchemy import or_
 
 
@@ -28,7 +28,7 @@ def org():
         result = [org_found.as_json()]
         return jsonify(result)
     else:
-        return error_response(404, f'Organization not found')
+        return error_response(404, 'Organization not found')
 
 
 @bp.route('/terrorist', methods=['GET'])
@@ -59,3 +59,10 @@ def terrorist():
         return response
 
     return error_response(404)
+
+
+@bp.route('/doc')
+def api_doc():
+    endpoint_o = url_for('api.org', _external=True)
+    endpoint_t = url_for('api.terrorist', _external=True)
+    return render_template('api_doc.html', epo=endpoint_o, ept=endpoint_t)
