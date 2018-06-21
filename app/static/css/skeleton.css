@@ -125,7 +125,8 @@ body {
   line-height: 1.6;
   font-weight: 400;
   font-family: "Open Sans", sans-serif;
-  color: #222; }
+  color: #222;
+  margin-top: 50px; }
 
 
 /* Typography
@@ -416,3 +417,15 @@ there.
 
 /* Larger than Desktop HD */
 @media (min-width: 1200px) {}
+
+
+/* Inline style for list */
+
+ul.pages {
+  margin: 0;
+  padding: 4px; /* Значение полей */
+}
+ ul.pages li {
+  display: inline;
+  margin-right: 5px;
+}

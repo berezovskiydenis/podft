@@ -21,7 +21,7 @@ def index():
     # Organization data
     o_count = Org.query.count()
 
-    return render_template('index.html', t_count=t_count, o_count=o_count)
+    return render_template('main.html', t_count=t_count, o_count=o_count)
 
 
 @bp.route('/persons')

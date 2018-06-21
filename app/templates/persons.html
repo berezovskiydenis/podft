@@ -1,15 +1,7 @@
-{% extends "base.html" %} {% block content %}
-<div class="row">
-    {% if current_user.is_authenticated %}
-      <p class="u-pull-right"><a href="{{ url_for('auth.logout') }}">Logout</a></p>
-    {% endif %}
-</div>
+{% extends "base.html" %}
+{% block content %}
 
-<div class="row">
-    <a href="{{ url_for('main.index') }}">На главную</a> |
-     <a href="{{ url_for('main.orgs') }}">Организации</a>
-</div>
-
+<h5>Физические лица</h5>
 <div class="row">
     <table class="u-full-width">
         <thead>
@@ -41,7 +33,6 @@
     </table>
 </div>
 
-
 <div class="row">
     <div class="six columns">
         {% if prev_url %}
@@ -55,4 +46,5 @@
     </div>
 </div>
 
+<hr>
 {% endblock %}
