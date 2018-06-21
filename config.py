@@ -34,6 +34,17 @@ class ProductionConfig(Config):
         default='sqlite:///' + os.path.join(BASE_DIR, 'app.db')
     )
 
+    @classmethod
+    def init_app(cls, app):
+        ProductionConfig.init_app(app)
+
+        # Log to syslog
+        import logging
+        from logging.handlers import SysLogHandler
+        syslog_handler = SysLogHandler()
+        syslog_handler.setLevel(logging.WARNING)
+        app.logger.addHandler(syslog_handler)
+
 
 config = {
     'development': DevelomentConfig,
