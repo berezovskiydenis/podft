@@ -36,7 +36,7 @@ class ProductionConfig(Config):
 
     @classmethod
     def init_app(cls, app):
-        ProductionConfig.init_app(app)
+        Config.init_app(app)
 
         # Log to syslog
         import logging
