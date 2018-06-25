@@ -25,8 +25,8 @@ def test():
 
 
 def call_async_kfm(app):
-    """Async function to grab included terrorists (persons and orgs)
-    from KFM web page.
+    """Async function to grab included and excluded terrorists
+    (persons and orgs) from KFM web page.
     """
     with app.app_context():
         # Use and inspect method to check is tables exists
@@ -38,6 +38,9 @@ def call_async_kfm(app):
         if 'terrorists' in table_names and 'orgs' in table_names:
             Terrorist.init_included()
             Org.init_included()
+
+            Terrorist.init_excluded()
+            Org.init_excluded()
 
         # Call func every 6 hours if KFM_SYNC_TIMER is not set
         t = threading.Timer(
